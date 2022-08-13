@@ -28,7 +28,10 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, 'src', 'index.html')
-        })
+        }),
+        new MiniCssExtractPlugin({
+            filename: 'index.[contenthash].css'
+        }),
     ],
     module: {
         rules: [
@@ -37,14 +40,14 @@ module.exports = {
                 loader: 'html-loader'
             },
             {
-                test: /\.(c | sa | sc)ss$/i,
+                test: /\.(c|sa|sc)ss$/i,
                 use: [
                     devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
                     'css-loader',
                     {
                         loader: 'postcss-loader',
                         options: {
-                            postCssOptions: {
+                            postcssOptions: {
                                 plugins: [require('postcss-preset-env')],
                             }
                         }
@@ -53,32 +56,22 @@ module.exports = {
                 ],
             },
             {
-                test: /\.m?js$/i,
-                exclude: /(node_modules | bower_components)/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['@babel/preset-env']
-                    }
-                }
-            },
-            {
                 test: /\.bundle\.ts$/i,
                 use: {
                     loader: 'bundle-loader',
                     options: {
-                        name: '[name]'
+                        name: '[name][hash]'
                     },
                 }
             },
             {
-                test: /\.tsx$/i,
+                test: /\.tsx?$/i,
                 use: 'ts-loader',
                 exclude: /node_modules/,
             }
         ]
     },
     resolve: {
-        extensions: ['.ts', 'tsx', '.js']
+        extensions: ['.ts', '.tsx', '.js']
     }
 }

@@ -1,0 +1,1 @@
+export const validateLength = (input: string) => input.trim().length > 0
